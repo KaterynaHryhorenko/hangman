@@ -111,7 +111,7 @@ def number_of_unique_letters (secret_word):
             unique_letters+=1
     return unique_letters
 
-def hangman(secret_word,guesses,warings,letters_guessed):
+def hangman(secret_word,guesses,warings,letters_guessed,result):
     '''
     secret_word: string, the secret word to guess.
     
@@ -139,9 +139,18 @@ def hangman(secret_word,guesses,warings,letters_guessed):
     if guesses <= 0 :#check number of attempts
         print('secret_word:',secret_word)
         print('You failed')
+        print("do you want retry?(print yes)")
+        answer=input()
+        if 'yes' in answer:
+            return hangman_with_hints(choose_word(wordlist),6,3,[],result)
         return
     elif is_word_guessed(secret_word, letters_guessed) == True:#checks if you won
-        print('Congratulations, you won! Your total score for this game is:',guesses*number_of_unique_letters (secret_word)) 
+        result=guesses*number_of_unique_letters (secret_word)
+        print('Congratulations, you won! Your total score for this game is:',result) 
+        print("do you want retry?(print yes)")
+        answer=input()
+        if 'yes' in answer:
+            return hangman_with_hints(choose_word(wordlist),6,3,[],result)
         return 
         
     
@@ -163,7 +172,7 @@ def hangman(secret_word,guesses,warings,letters_guessed):
             guesses-=1
             warings=3
             if guesses == 0:
-                return hangman(secret_word,guesses,warings,letters_guessed)
+                return hangman(secret_word,guesses,warings,letters_guessed,result)
         print('you have',warings,'warings')
         letter=input('Please guess a letter:')
         
@@ -178,7 +187,7 @@ def hangman(secret_word,guesses,warings,letters_guessed):
         else:
             guesses-=1
         print('Oops! That letter is not in my word.')
-    return hangman(secret_word,guesses,warings,letters_guessed)    
+    return hangman(secret_word,guesses,warings,letters_guessed,result)    
 
 
 
@@ -226,15 +235,16 @@ def show_possible_matches(my_word):
     listt=listt[1:]
     listt=listt[:len(listt)-1]
     listt=listt.split()
+    output=[]
     for i in range(len(listt)):#checks match
         if match_with_gaps(my_word, listt[i]) == True:
-            print(listt[i])
+            output.append(listt[i])
         
-    return 
+    return output
 
 	
 
-def hangman_with_hints(secret_word,guesses,warings,letters_guessed):
+def hangman_with_hints(secret_word,guesses,warings,letters_guessed,result):
     '''
     secret_word: string, the secret word to guess.
     
@@ -264,10 +274,18 @@ def hangman_with_hints(secret_word,guesses,warings,letters_guessed):
     if guesses <= 0 :
         print('secret_word:',secret_word)
         print('You failed')
+        print("do you want retry?(print yes)")
+        answer=input()
+        if 'yes' in answer:
+            return hangman_with_hints(choose_word(wordlist),6,3,[],result)
         return
     elif is_word_guessed(secret_word, letters_guessed) == True:
-        print('Congratulations, you won! Your total score for this game is:',guesses*number_of_unique_letters (secret_word)) 
-        return 
+        result=guesses*number_of_unique_letters (secret_word)
+        print('Congratulations, you won! Your total score for this game is:',result) 
+        print("do you want retry?(print yes)")
+        answer=input()
+        if 'yes' in answer:
+            return hangman_with_hints(choose_word(wordlist),6,3,[],result)
         
     
     print('-------------')
@@ -278,7 +296,7 @@ def hangman_with_hints(secret_word,guesses,warings,letters_guessed):
 
     letter=input('Please guess a letter:')
     if letter in '*' :#turning a hint
-       show_possible_matches(get_guessed_word(secret_word, letters_guessed))
+       print(show_possible_matches(get_guessed_word(secret_word, letters_guessed)))
        letter=input('Please guess a letter:')
     
     while letter in letters_guessed or not(letter.isalpha()) or letter.isupper() : #validation of letter
@@ -292,7 +310,7 @@ def hangman_with_hints(secret_word,guesses,warings,letters_guessed):
     		guesses-=1
     		warings=3
     		if guesses == 0:
-    			return hangman_with_hints(secret_word,guesses,warings,letters_guessed)
+    			return hangman_with_hints(secret_word,guesses,warings,letters_guessed,result)
     	print('you have',warings,'warings')
     	letter=input('Please guess a letter:')
         
@@ -308,7 +326,7 @@ def hangman_with_hints(secret_word,guesses,warings,letters_guessed):
         else:
             guesses-=1
         print('Oops! That letter is not in my word.')
-    return hangman_with_hints(secret_word,guesses,warings,letters_guessed)  
+    return hangman_with_hints(secret_word,guesses,warings,letters_guessed,result)  
 
 # When you've completed your hangman_with_hint function, comment the two similar
 # lines above that were used to run the hangman function, and then uncomment
@@ -326,7 +344,7 @@ if __name__ == "__main__":#work of computer module
     #secret_word = choose_word(wordlist)
     #print('Welcome to the game Hangman!')
     #print('I am thinking of a word that is ',len(secret_word),'letters long.')
-    #hangman(secret_word,6,3,[])
+    #hangman(secret_word,6,3,[],0)
 
 ###############
     
@@ -334,7 +352,9 @@ if __name__ == "__main__":#work of computer module
     # uncomment the following two lines. 
     
     secret_word = choose_word(wordlist)
-    hangman_with_hints(secret_word,6,3,[])
+    print('Welcome to the game Hangman!')
+    print('I am thinking of a word that is ',len(secret_word),'letters long.')
+    hangman_with_hints(secret_word,6,3,[],0)
 
 
 
