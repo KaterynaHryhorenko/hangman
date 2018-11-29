@@ -106,7 +106,7 @@ def get_available_letters(letters_guessed):
 
 def number_of_unique_letters (secret_word):
     unique_letters=0
-    for i in 'aeuio':#count unique letters in secret word
+    for i in 'aeuioy':#count unique letters in secret word
         if i in secret_word:
             unique_letters+=1
     return unique_letters
@@ -141,17 +141,17 @@ def hangman(secret_word,guesses,warings,letters_guessed,result):
         print('You failed')
         print("do you want retry?(print yes)")
         answer=input()
-        if 'yes' in answer:
+        if answer in 'yes' :
             return hangman_with_hints(choose_word(wordlist),6,3,[],result)
-        return
+        return 'goodbye:)'
     elif is_word_guessed(secret_word, letters_guessed) == True:#checks if you won
-        result=guesses*number_of_unique_letters (secret_word)
+        result=guesses*number_of_unique_letters (secret_word)+result
         print('Congratulations, you won! Your total score for this game is:',result) 
         print("do you want retry?(print yes)")
         answer=input()
-        if 'yes' in answer:
+        if answer in 'yes':
             return hangman_with_hints(choose_word(wordlist),6,3,[],result)
-        return 
+        return 'goodbye:)'
         
     
     print('-------------')
@@ -182,7 +182,7 @@ def hangman(secret_word,guesses,warings,letters_guessed,result):
     if letter in secret_word:#check if letter in secret word
         print('Good guess!' )
     else:
-        if letter in 'aeuio':
+        if letter in 'aeuioy':
             guesses-=2
         else:
             guesses-=1
@@ -210,10 +210,15 @@ def match_with_gaps(my_word, other_word):
         _ , and my_word and other_word are of the same length;
         False otherwise: 
     '''
+    sett=set(my_word)
     if len(my_word) == len(other_word):#check len of words(to reduce the search circle)
             for i in range(len(my_word)):
                      if my_word[i] != other_word[i] and my_word[i] not in '_' :#rejects not similar words
                              return False
+                     elif my_word[i] == '_':
+                            hidden_letter = other_word[i]
+                            if hidden_letter in my_word:
+                                return False
             return True
     else:
         return False
@@ -239,8 +244,9 @@ def show_possible_matches(my_word):
     for i in range(len(listt)):#checks match
         if match_with_gaps(my_word, listt[i]) == True:
             output.append(listt[i])
-        
-    return output
+    output_str=" ".join(output)
+    return output_str
+
 
 	
 
@@ -278,15 +284,15 @@ def hangman_with_hints(secret_word,guesses,warings,letters_guessed,result):
         answer=input()
         if 'yes' in answer:
             return hangman_with_hints(choose_word(wordlist),6,3,[],result)
-        return
+        return 'godbbye:)'
     elif is_word_guessed(secret_word, letters_guessed) == True:
-        result=guesses*number_of_unique_letters (secret_word)
+        result=guesses*number_of_unique_letters (secret_word)+result
         print('Congratulations, you won! Your total score for this game is:',result) 
         print("do you want retry?(print yes)")
         answer=input()
         if 'yes' in answer:
             return hangman_with_hints(choose_word(wordlist),6,3,[],result)
-        
+        return'goodbye:)'
     
     print('-------------')
     print(get_guessed_word(secret_word, letters_guessed))
@@ -321,7 +327,7 @@ def hangman_with_hints(secret_word,guesses,warings,letters_guessed,result):
     if letter in secret_word:
         print('Good guess!' )
     else:
-        if letter in 'aeuio':
+        if letter in 'aeuioy':
             guesses-=2
         else:
             guesses-=1
@@ -344,7 +350,7 @@ if __name__ == "__main__":#work of computer module
     #secret_word = choose_word(wordlist)
     #print('Welcome to the game Hangman!')
     #print('I am thinking of a word that is ',len(secret_word),'letters long.')
-    #hangman(secret_word,6,3,[],0)
+    #print(hangman(secret_word,6,3,[],0))
 
 ###############
     
@@ -354,7 +360,7 @@ if __name__ == "__main__":#work of computer module
     secret_word = choose_word(wordlist)
     print('Welcome to the game Hangman!')
     print('I am thinking of a word that is ',len(secret_word),'letters long.')
-    hangman_with_hints(secret_word,6,3,[],0)
+    print(hangman_with_hints(secret_word,6,3,[],0))
 
 
 
